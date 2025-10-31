@@ -1,0 +1,91 @@
+erdiagram Team23_Database
+    notation=crowsfoot
+
+    entity Customer {
+        Cust_ID: INTEGER key
+        Cust_Name: VARCHAR(100)
+        Cust_Email: VARCHAR(100)
+        Cust_Type: VARCHAR(50)
+        Purchase_Amount: DECIMAL(10,2)
+    }
+
+    entity Invoice {
+        Invoice_ID: INTEGER key
+        Invoice_Date: DATE
+        Cust_ID: INTEGER
+        Total_Amount: DECIMAL(10,2)
+        Shipping_Address: VARCHAR(200)
+        Shipping_Fee: DECIMAL(10,2)
+        Status: VARCHAR(50)
+        Payment_Status: VARCHAR(50)
+    }
+
+    entity Invoice_Line {
+        Invoice_Line_ID: INTEGER key
+        Invoice_ID: INTEGER
+        Product_ID: INTEGER
+        Quantity: INTEGER
+        Unit_Price: DECIMAL(10,2)
+    }
+
+    entity Product {
+        Product_ID: INTEGER key
+        Product_Name: VARCHAR(100)
+        Product_Type: VARCHAR(50)
+        Product_Scale: VARCHAR(20)
+        Unit_Price: DECIMAL(10,2)
+        Quantity_On_Hand: INTEGER
+        Min_Inventory: INTEGER
+        Manufacturer_ID: INTEGER
+        Last_Sale_Date: DATE
+    }
+
+    entity Manufacturer {
+        Manu_ID: INTEGER key
+        Manu_Name: VARCHAR(100)
+        Website: VARCHAR(100)
+    }
+
+    entity Purchase_Order {
+        Order_ID: INTEGER key
+        Order_Date: DATE
+        Manu_ID: INTEGER
+        Total_Cost: DECIMAL(10,2)
+        Order_Status: VARCHAR(50)
+    }
+
+    entity Order_Line {
+        Order_Line_ID: INTEGER key
+        Order_ID: INTEGER
+        Product_ID: INTEGER
+        Quantity: INTEGER
+        Unit_Cost: DECIMAL(10,2)
+    }
+
+    relationship CustomerInvoice {
+        Customer[1 | 'customer'] -> Invoice[0..N | "invoice"]
+    }
+
+    relationship InvoiceInvoiceLine {
+        Invoice[1 | "invoice"] -> Invoice_Line[1..N | "invoice_line"]
+    }
+
+    relationship ProductInvoiceLine {
+        Product[0..N | "product"] -> Invoice_Line[1 | "invoice_line"]
+    }
+
+    relationship ManufacturerProduct {
+        Manufacturer[1 | "manufacturer"] -> Product[1..N | "product"]
+    }
+
+    relationship ManufacturerPurchaseOrder {
+        Manufacturer[1 | "manufacturer"] -> Purchase_Order[0..N | "purchase_order"]
+    }
+
+    relationship PurchaseOrderOrderLine {
+        Purchase_Order[1 | "purchase_order"] -> Order_Line[1..N | "order_line"]
+    }
+
+    relationship ProductOrderLine {
+        Product[0..N | "product"] -> Order_Line[1 | "order_line"]
+    }
